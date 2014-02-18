@@ -1,0 +1,59 @@
+\def\@linebyline@low#1 {%  private
+  \ifx\!#1\else
+  \setbox\z@\vbox{%
+    \noindent\unhbox\tw@\unskip\unskip\unpenalty\sporindent#1}%
+  \let\sporindent\space
+  \ifdim\ht\z@>\baselineskip
+    \setbox\z@\vbox{%
+      \unvbox\z@
+      \global\setbox1\lastbox
+      \unskip\unpenalty\unskip\unpenalty
+      \global\setbox\thr@@\lastbox
+    }%
+    % The \hfil here corresponds to \raggedright.
+    \hbox to\textwidth{%
+      \hskip\@topsepadd
+      \unhbox\thr@@\unskip\unskip\unpenalty
+      \hskip\@rightskip}%
+  \else
+    \setbox\z@\vbox{\unvbox\z@ \global\setbox\@ne\lastbox}%
+  \fi
+  \setbox\tw@\box\@ne
+  \expandafter\@linebyline@low
+  \fi}
+%** Typesets #1 in a separate, unindented paragraph in an almost completely
+%** greedy way: it packs as much as possible to each line. Can be used in
+%** narrow columns when LaTeX doesn't want to break the line.
+%**
+%** Based on David Carlisle's answer http://tex.stackexchange.com/a/131275 ,
+%** but added support for arbitrary \leftskip and \rightskip.
+\def\linebylinepar#1{%  public
+  \begingroup
+  \textwidth\hsize
+  \advance\hsize-\leftskip
+  \advance\hsize-\rightskip
+  \@topsepadd\leftskip   % Reusing existing \newskip\@topsepadd.
+  \@rightskip\rightskip  % Reusing existing \newskip\@rightskip.
+  % Similar to \raggedright (needed even if not originally).
+  \leftskip\z@
+  \rightskip\@flushglue
+  \let\\\@centercr
+  \parindent\z@
+  \par
+  \finalhyphendemerits\z@
+  \clubpenalty\z@
+  \widowpenalty\z@
+  \def\sporindent{\hskip\parindent}%
+  \setbox\tw@\hbox{}%
+  \begingroup  %\updef\reserved@a{#1}%
+    \let\protect\@unexpandable@protect
+    \edef\reserved@a{#1}%
+  \expandafter\endgroup\expandafter\def
+  \expandafter\reserved@a\expandafter{\reserved@a}%
+  \@firstofone{\expandafter\@linebyline@low\reserved@a} \! \relax
+  \hbox to\textwidth{%
+    \hskip\@topsepadd
+    \unhbox\tw@\unskip\unskip\unpenalty
+    \hskip\parfillskip
+    \hskip\@rightskip}%
+  \par\endgroup}
