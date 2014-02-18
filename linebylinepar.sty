@@ -1,5 +1,9 @@
 % !! get rid of \global
 
+% We declare these so \global\setbox doesn't interfere with anything else.
+\newbox\@linebylinebox@one
+\newbox\@linebylinebox@three
+
 \def\@linebyline@low#1 {%  private
   \ifx\!#1\else
   \setbox\z@\vbox{%
@@ -8,21 +12,22 @@
   \ifdim\ht\z@>\baselineskip
     \setbox\z@\vbox{%
       \unvbox\z@
-      \global\setbox1\lastbox
+      \global\setbox\@linebylinebox@one\lastbox
       \unskip\unpenalty\unskip\unpenalty
-      \global\setbox\thr@@\lastbox
+      \global\setbox\@linebylinebox@three\lastbox
       \unskip\unpenalty\unskip\unpenalty%<<
     }%
     \ifdim\ht\z@>\z@\box\z@\fi%<<
     % The \hfil here corresponds to \raggedright.
     \hbox to\textwidth{%
       \hskip\@topsepadd
-      \unhbox\thr@@\unskip\unskip\unpenalty
+      \unhbox\@linebylinebox@three\unskip\unskip\unpenalty
       \hskip\@rightskip}%
   \else
-    \setbox\z@\vbox{\unvbox\z@ \global\setbox\@ne\lastbox}%
+    \setbox\z@\vbox{\unvbox\z@
+      \global\setbox\@linebylinebox@one\lastbox}%
   \fi
-  \setbox\tw@\box\@ne
+  \setbox\tw@\box\@linebylinebox@one
   \expandafter\@linebyline@low
   \fi}
 %** Typesets #1 in a separate, unindented paragraph in an almost completely
