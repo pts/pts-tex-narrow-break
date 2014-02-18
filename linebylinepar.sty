@@ -1,3 +1,5 @@
+% !! get rid of \global
+
 \def\@linebyline@low#1 {%  private
   \ifx\!#1\else
   \setbox\z@\vbox{%
@@ -9,7 +11,9 @@
       \global\setbox1\lastbox
       \unskip\unpenalty\unskip\unpenalty
       \global\setbox\thr@@\lastbox
+      \unskip\unpenalty\unskip\unpenalty%<<
     }%
+    \ifdim\ht\z@>\z@\box\z@\fi%<<
     % The \hfil here corresponds to \raggedright.
     \hbox to\textwidth{%
       \hskip\@topsepadd
