@@ -1,4 +1,7 @@
-% !! get rid of \global
+% by pts@fazekas.hu at Wed Feb 19 00:55:15 CET 2014
+% based on code http://tex.stackexchange.com/a/131275 by David Carlisle
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{linebylinepar}[2014/02/19 Greedy line breaking]
 
 % We declare these so \global\setbox doesn't interfere with anything else.
 \newbox\@linebylinebox@one
@@ -34,6 +37,10 @@
 %** greedy way: it packs as much as possible to each line. Can be used in
 %** narrow columns when LaTeX doesn't want to break the line.
 %**
+%** Please note that this algorithm is not completely greedy: it packs a
+%** little bit less than possible to a line if that would cause a good
+%** enough line break.
+%**
 %** Based on David Carlisle's answer http://tex.stackexchange.com/a/131275 ,
 %** but added support for arbitrary \leftskip and \rightskip.
 \def\linebylinepar#1{%  public
@@ -66,3 +73,5 @@
     \hskip\parfillskip
     \hskip\@rightskip}%
   \par\endgroup}
+
+\endinput
