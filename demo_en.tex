@@ -1,0 +1,73 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper]{geometry}
+\usepackage{lmodern}
+\usepackage[scaled]{helvet}
+\usepackage[T1]{fontenc}
+\usepackage{cals}
+\usepackage{linebylinepar}
+
+\makeatletter
+
+% Like \struct, but allows automatic hyphenation on both sides.
+\def\xstrut{\leavevmode\nobreak\hskip0pt\strut\nobreak\hskip0pt\relax}
+
+% Like \alignL, but doesn't justify.
+\newcommand\alignF{%
+  \dimen0=\cals@paddingR \cals@paddingR=\dimen0 plus 1fill\relax
+  \dimen0=\cals@paddingL \cals@paddingL=\dimen0 \relax}
+
+%** Similar to \raggedright, but adapts to \alignF.
+\def\raggedrightF{\let \\\@centercr \@rightskip \rightskip}%
+
+%\def\solA{%
+%  \advance\hsize-\cals@paddingL \advance\hsize-\cals@paddingR}
+
+%** The beseline. Justified.
+\def\solA#1{\alignL\cell{\xstrut#1\xstrut\par}}%
+%** Left-aligned. More line breaks expected than with \solA.
+\def\solB#1{\alignF\cell{\xstrut#1\xstrut\par}\alignL}%
+%** With 99% probability, produces the same result as \solB.
+\def\solC#1{\alignF\cell{\raggedrightF\xstrut#1\xstrut\par}\alignL}%
+%** Produces more line breaks than \solB, but most probably still not
+%** enough.
+\def\solD#1{\alignF\cell{\sloppy\xstrut#1\xstrut\par}\alignL}%
+%** Produces great results most of the time, but it may fail with an
+%** unintelligible error message occasionally.
+\def\solE#1{\alignF\cell{\linebylinepar{\xstrut#1\xstrut}}\alignL}%
+
+\makeatother
+
+\begin{document}
+
+\makeatletter
+\renewcommand*\familydefault{\sfdefault}
+\normalfont
+
+\def\testtext{meg\-szent\-s\'eg\-te\-le\-n\'it\-he\-tet\-len\-s\'e\-ges\-ke\-d\'e\-se\-i\-tek\-\'ert, au\-t\'o\-busz-\allowbreak \'al\-lo\-m\'as
+    meg\-szent\-s\'eg\-te\-le\-n\'it\-he\-tet\-len\-s\'e\-ges\-ke\-d\'e\-se\-i\-tek\-\'ert}
+
+\begin{calstable}
+\colwidths{{141pt}{141pt}}
+\cals@paddingL=2pt
+\cals@paddingR=2pt
+\cals@paddingT=2pt
+\cals@paddingB=2pt
+\thead{
+  \bfseries
+  \alignC
+  \brow
+  \cell{\xstrut head1}
+  \cell{\xstrut head2}
+  \erow
+  \mdseries
+}
+\brow \solA{\testtext} \alignL \cell{\xstrut xoo} \erow
+\brow \solB{\testtext} \alignL \cell{\xstrut xoo} \erow
+\brow \solC{\testtext} \alignL \cell{\xstrut xoo} \erow
+\brow \solD{\testtext} \alignL \cell{\xstrut xoo} \erow
+\brow \solE{\testtext} \alignL \cell{\xstrut xoo} \erow
+\end{calstable}
+
+\end{document}
