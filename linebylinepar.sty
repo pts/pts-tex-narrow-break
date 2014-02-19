@@ -45,6 +45,7 @@
 %** but added support for arbitrary \leftskip and \rightskip.
 \def\linebylinepar#1{%  public
   \begingroup
+  \par
   \textwidth\hsize
   \advance\hsize-\leftskip
   \advance\hsize-\rightskip
@@ -55,7 +56,9 @@
   \rightskip\@flushglue
   \let\\\@centercr
   \parindent\z@
-  \par
+  \pretolerance-1  % Always consider hyphenating the paragraph.
+  \hyphenpenalty1  % Hyphenating a word is not that bad.
+  \exhyphenpenalty2  % Hyphenating a word with a hyphen is not that bad.
   \finalhyphendemerits\z@
   \clubpenalty\z@
   \widowpenalty\z@
